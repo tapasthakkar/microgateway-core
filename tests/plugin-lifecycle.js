@@ -54,7 +54,6 @@ describe('test lifecycle events', function () {
     var doned = false;
     for (var i = 0; i < 10; i++) {
       p.then(function (m) {
-        console.log(m)
         assert(m == 0);
         if (i == 10 && !doned) {
           doned = true;

@@ -31,22 +31,9 @@ module.exports = function (config) {
 }
 
 Gateway.prototype.start = function (cb) {
-
   const logger =logging.getLogger();
   const config = configService.get();
   let plugins  = this.plugins;
-  if(!plugins.length) {
-    const pluginsLoader = pluginsLib();
-    try {
-      if(config.edgemicro.plugins) {
-        plugins = pluginsLoader.loadPlugins().reverse();
-      }else{
-        logger.warn({message:"plugins not configured"})
-      }
-    } catch (err) {
-      return cb(err);
-    }
-  }
   debug('starting edgemicro');
   //debug('loaded config ' + util.inspect(config, {colors: true}));
   gateway.start( plugins, function (err, server) {
