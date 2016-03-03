@@ -1,0 +1,30 @@
+{
+  "name": "edgemicro-gateway",
+  "version": "1.1.1",
+  "description": "Apigee Edge Microgateway",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^1.4.2",
+    "debug": "^2.2.0",
+    "fs-extra": "^0.26.3",
+    "js-yaml": "^3.4.2",
+    "lodash": "^3.9.3",
+    "mkdirp": "^0.5.1",
+    "request": "^2.55.0",
+    "uuid": "^2.0.1",
+    "yargs": "^3.20.0"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.2.4",
+    "restify": "^4.0.3",
+    "should": "^8.2.2",
+    "tmp": "0.0.28"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "NODE_ENV=test node_modules/mocha/bin/_mocha --recursive tests",
+    "coverage": "DEBUG=gateway:* NODE_ENV=test node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- tests"
+  }
+}
