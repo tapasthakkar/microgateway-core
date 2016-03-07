@@ -49,7 +49,7 @@ describe('logging', function() {
   });
 
   it('warn', function(done) {
-    config.edgemicro.logging.level = 'warn';
+    log.setLevel( 'warn');
     ['warn', 'error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
@@ -70,6 +70,7 @@ describe('logging', function() {
 
   it('error', function(done) {
     config.edgemicro.logging.level = 'error';
+     log.setLevel( 'error');
     ['error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
