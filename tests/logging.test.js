@@ -34,6 +34,7 @@ describe('logging', function() {
 
   it('info', function(done) {
     config.edgemicro.logging.level = 'info';
+    log.setLevel('info');
     ['info', 'warn', 'error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
