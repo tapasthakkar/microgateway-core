@@ -1,7 +1,3 @@
-/// <reference path="../../../typings/node/node.d.ts" />
-/// <reference path="../../../typings/mocha/mocha.d.ts" />
-/// <reference path="../../../typings/chai/chai.d.ts" />
-
 'use strict';
 
 var fs = require('fs');
@@ -38,6 +34,7 @@ describe('logging', function() {
 
   it('info', function(done) {
     config.edgemicro.logging.level = 'info';
+    log.setLevel('info');
     ['info', 'warn', 'error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
@@ -52,7 +49,7 @@ describe('logging', function() {
   });
 
   it('warn', function(done) {
-    config.edgemicro.logging.level = 'warn';
+    log.setLevel( 'warn');
     ['warn', 'error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
@@ -73,6 +70,7 @@ describe('logging', function() {
 
   it('error', function(done) {
     config.edgemicro.logging.level = 'error';
+     log.setLevel( 'error');
     ['error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
