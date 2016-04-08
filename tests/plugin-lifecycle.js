@@ -86,7 +86,7 @@ describe('test lifecycle events', function() {
         url: 'http://localhost:' + gatewayPort + '/v1/echo/post',
         json: { "test": "123" }
       }, (err, r, body) => {
-        assert(!err, body);
+        assert(!err, err);
         assert.deepEqual(body, { "post": bodyMap['post'], body: { "test": "123" } });//confirm echo and body are returned
 
         var keys = Object.keys(types);
@@ -188,7 +188,7 @@ describe('test lifecycle events', function() {
         url: 'http://localhost:' + gatewayPort + '/v1/echo/put',
         json: { "test": "1234" }
       }, (err, r, body) => {
-        assert(!err, body);
+        assert(!err, err);
         assert.deepEqual(body, { "put": bodyMap['put'], body: { "test": "1234" } });//confirm echo and body are returned
 
         var keys = Object.keys(types);

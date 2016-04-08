@@ -31,7 +31,23 @@ describe('logging', function() {
     log = logging.getLogger();
     done();
   });
+  it('none', function(done) {
+    var logging = require('../lib/logging');
 
+    var level = config.edgemicro.logging.level;
+    config.edgemicro.logging.level = 'none';
+    logging.init(config);
+    log = logging.getLogger();
+    log.setLevel('none');
+    ['info', 'warn', 'error'].forEach(function(level) {
+      var text = log[level](message);
+      expect(text).to.be.null;
+    });
+     config.edgemicro.logging.level = level
+      logging.init(config);
+    log = logging.getLogger();
+    done();
+  });
   it('info', function(done) {
     config.edgemicro.logging.level = 'info';
     log.setLevel('info');
@@ -49,7 +65,7 @@ describe('logging', function() {
   });
 
   it('warn', function(done) {
-    log.setLevel( 'warn');
+    log.setLevel('warn');
     ['warn', 'error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;
@@ -70,7 +86,7 @@ describe('logging', function() {
 
   it('error', function(done) {
     config.edgemicro.logging.level = 'error';
-     log.setLevel( 'error');
+    log.setLevel('error');
     ['error'].forEach(function(level) {
       var text = log[level](message);
       expect(text).to.not.be.null;

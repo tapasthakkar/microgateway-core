@@ -39,8 +39,7 @@ TestPlugin.prototype.init = function myPlugin1() {
 
     onclose_request: function (req, res, data, next) {
       cb('onclose_request', data, function () {
-        res.setHeader("x-onclose_request-visited", 'true');
-        headers.push("x-onclose_request-visited");
+
 
         next();
       })
