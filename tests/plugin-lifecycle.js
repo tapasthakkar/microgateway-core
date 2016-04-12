@@ -24,7 +24,7 @@ describe('test lifecycle events', function() {
   config = {
     edgemicro: {
       port: gatewayPort,
-      logging: { level: 'info', dir: './' }
+      logging: { level: 'info', dir: './tests/log' }
     },
     proxies: [
       { base_path: '/v1', secure: false, url: 'http://localhost:' + port }

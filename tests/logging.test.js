@@ -7,11 +7,8 @@ var should = chai.should();
 var debug = require('debug')('gateway:logging-test');
 
 describe('logging', function() {
-
   process.env.NODE_ENV = 'test';
-
   var message = 'log_message';
-
   var config = {
     uid: process.pid,
     edgemicro: {
@@ -24,7 +21,6 @@ describe('logging', function() {
   };
 
   var log;
-
   beforeEach(function(done) {
     var logging = require('../lib/logging');
     logging.init(config);
@@ -33,11 +29,8 @@ describe('logging', function() {
   });
   it('none', function(done) {
     var logging = require('../lib/logging');
-
     var level = config.edgemicro.logging.level;
     config.edgemicro.logging.level = 'none';
-    logging.init(config);
-    log = logging.getLogger();
     log.setLevel('none');
     ['info', 'warn', 'error'].forEach(function(level) {
       var text = log[level](message);
@@ -53,7 +46,7 @@ describe('logging', function() {
     log.setLevel('info');
     ['info', 'warn', 'error'].forEach(function(level) {
       var text = log[level](message);
-      expect(text).to.not.be.null;
+      expect(text).to.not.be.undefined;
       var record = text.trim().split(' ');
       debug(record);
       record.length.should.equal(3);
@@ -68,7 +61,7 @@ describe('logging', function() {
     log.setLevel('warn');
     ['warn', 'error'].forEach(function(level) {
       var text = log[level](message);
-      expect(text).to.not.be.null;
+      expect(text).to.not.be.undefined;
       var record = text.trim().split(' ');
       debug(record);
       record.length.should.equal(3);
