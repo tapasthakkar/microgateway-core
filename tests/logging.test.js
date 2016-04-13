@@ -49,7 +49,7 @@ describe('logging', function() {
       expect(text).to.not.be.undefined;
       var record = text.trim().split(' ');
       debug(record);
-      record.length.should.equal(4);
+      record.length.should.equal(3);
       record[0].should.be.a.number;
       record[1].should.equal(level);
       record[2].should.equal(message);
@@ -64,7 +64,7 @@ describe('logging', function() {
       expect(text).to.not.be.undefined;
       var record = text.trim().split(' ');
       debug(record);
-      record.length.should.equal(4);
+      record.length.should.equal(3);
       record[0].should.be.a.number;
       record[1].should.equal(level);
       record[2].should.equal(message);
@@ -85,7 +85,7 @@ describe('logging', function() {
       expect(text).to.not.be.null;
       var record = text.trim().split(' ');
       debug(record);
-      record.length.should.equal(4);
+      record.length.should.equal(3);
       record[0].should.be.a.number;
       record[1].should.equal(level);
       record[2].should.equal(message);
