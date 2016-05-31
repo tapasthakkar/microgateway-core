@@ -24,11 +24,12 @@ edgemicro:
     sequence:
       - oauth
 headers:
+  host: true
+  via: true
   x-forwarded-for: true
   x-forwarded-host: true
   x-request-id: true
   x-response-time: true
-  via: true
 oauth:
   allowNoAuthorization: false
   allowInvalidAuthorization: false
