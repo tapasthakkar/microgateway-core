@@ -3,7 +3,7 @@
 var fs = require('fs');
 var chai = require('chai');
 var expect = chai.expect;
-var should = chai.should();
+var should = require('should');
 var debug = require('debug')('gateway:logging-test');
 
 describe('logging', function() {
