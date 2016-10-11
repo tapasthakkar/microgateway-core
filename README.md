@@ -21,7 +21,7 @@ const plugin = {
 }
 config.get({source:'same.yaml',keys:{key: '', secret: ''}},(err,config)=>{
 	const gateway = Gateway(config);
-	gateway.addPlugin('my-plugin', plugin);
+	gateway.addPlugin('my-plugin', plugin.init);
 	gateway.start((server)=>{
 	});
 });
