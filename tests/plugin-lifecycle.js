@@ -101,7 +101,7 @@ describe('test lifecycle events', function() {
     var expectedTypes = ['ondata_request', 'onrequest', 'onend_request', 'onresponse', 'ondata_response', 'onend_response'];
     var types = {};
     var startMs = 1000;
-    var testPlugin = TestPlugin(function(type, data, cb) {
+    var testPlugin = TestPlugin(function(type, data, cb, req, res) {
       startMs = startMs - 200;
       setTimeout(() => {
         types[type] = data;
@@ -112,7 +112,7 @@ describe('test lifecycle events', function() {
           // console.log(testPlugin.expectedHeaders)
         }
         assert.equal(
-          _findHeaders(data.sourceResponse.headers(), testPlugin.expectedHeaders).length, testPlugin.expectedHeaders.length
+          _findHeaders(res.headers(), testPlugin.expectedHeaders).length, testPlugin.expectedHeaders.length
         );
         cb();
       }, startMs);
