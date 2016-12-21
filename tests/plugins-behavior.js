@@ -2,7 +2,7 @@ const assert = require('assert');
 const PluginsMiddleware = require('../lib/plugins-middleware');
 
 describe('plugin behavior', () => {
-  it('exposes _executePluginHandler', () => {
+  it('exposes getPluginHookForEvent', () => {
     assert.ok(PluginsMiddleware._executePluginHandler);
   });
 
