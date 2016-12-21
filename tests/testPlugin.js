@@ -36,25 +36,9 @@ TestPlugin.prototype.init = function myPlugin1() {
         next(null, data);
       }, req, res)
     },
-
-    onclose_request: function (req, res, data, next) {
-      cb('onclose_request', data, function () {
-
-
-        next();
-      }, req, res)
-    },
-    onclose_response: function (req, res, data, next) {
-      cb('onclose_response', data, function () {
-        res.setHeader("x-onclose_response-visited", 'true');
-        headers.push("x-onclose_response-visited");
-
-        next();
-      }, req, res)
-    },
     ondata_request: function (req, res, data, next) {
       cb('ondata_request', data, function () {
-        next();
+        next(null, data);
       }, req, res)
     },
     ondata_response: function (req, res, data, next) {
@@ -64,12 +48,12 @@ TestPlugin.prototype.init = function myPlugin1() {
     },
     onend_request: function (req, res, data, next) {
       cb('onend_request', data, function () {
-        next();
+        next(null, data);
       }, req, res)
     },
     onend_response: function (req, res, data, next) {
       cb('onend_response', data, function () {
-        next();
+        next(null, data);
       }, req, res)
     },
     onerror_request: function (req, res, data, next) {
