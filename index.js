@@ -26,10 +26,12 @@ var Gateway = function (config) {
 
 };
 
+
 module.exports = function (config) {
   return new Gateway(config);
 }
 
+module.exports.Logging = logging;
 Gateway.prototype.start = function (cb) {
   const logger =logging.getLogger();
   const config = configService.get();
