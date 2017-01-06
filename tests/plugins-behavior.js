@@ -3,7 +3,7 @@ const PluginsMiddleware = require('../lib/plugins-middleware');
 
 describe('plugin behavior', () => {
   it('exposes getPluginHookForEvent', () => {
-    assert.ok(PluginsMiddleware._executePluginHandler);
+    assert.ok(PluginsMiddleware.getPluginHookForEvent);
   });
 
   it('will provide three arguments to in req, res, next format', (done) => {
@@ -21,7 +21,7 @@ describe('plugin behavior', () => {
       sourceResponse: 'bar',
     }
 
-    PluginsMiddleware._executePluginHandler(plugins, 'data', opts)('foo', (arg1, arg2) =>{
+    PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
       assert.equal(arg1, null);
       assert.equal(arg2, null);
       done(); 
@@ -44,7 +44,7 @@ describe('plugin behavior', () => {
       sourceResponse: 'bar',
     }
 
-    PluginsMiddleware._executePluginHandler(plugins, 'data', opts)('foo', (arg1, arg2) =>{
+    PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
       assert.equal(arg1, null);
       assert.equal(arg2, null);
       done(); 
@@ -69,7 +69,7 @@ describe('plugin behavior', () => {
       targetResponse: 'quux',
     }
 
-    PluginsMiddleware._executePluginHandler(plugins, 'data', opts)('foo', (arg1, arg2) =>{
+    PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
       assert.equal(arg1, null);
       assert.equal(arg2, null);
       done(); 
