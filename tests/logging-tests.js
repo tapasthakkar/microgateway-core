@@ -15,7 +15,6 @@ describe('logging', function() {
     edgemicro: {
       port: 8000,
       logging: {
-        to_console: true,
         level: 'info',
         dir: './tests/log'
       }
