@@ -3,6 +3,8 @@
 const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
+const util = require('util');
+const os = require('os');
 var chai = require('chai');
 var expect = chai.expect;
 var debug = require('debug')('gateway:logging-test');
@@ -45,7 +47,7 @@ describe('logging', function() {
 
   it('will calculate a file path for a log in a consistent way', () => {
     var filePath = logging._calculateLogFilePath('./tests/log', '1', 1);
-    assert.equal(filePath, 'tests/log/edgemicro-ncc1701d.local-1-1-api.log');
+    assert.equal(filePath, path.join('./tests/log', util.format('edgemicro-%s-%s-%d-api.log', os.hostname(), '1', 1)));
   });
 
   it('will log to a file', () => {
