@@ -1,5 +1,6 @@
 'use strict';
 
+const assert = require('assert');
 var fs = require('fs');
 var chai = require('chai');
 var expect = chai.expect;
@@ -27,6 +28,10 @@ describe('logging', function() {
     log = logging.getLogger();
     done();
   });
+
+  it('logger should expose a writeLogRecord', () => {
+    assert.ok(log.writeLogRecord);
+  }); 
   it('none', function(done) {
     var logging = require('../lib/logging');
     var level = config.edgemicro.logging.level;
@@ -96,5 +101,4 @@ describe('logging', function() {
     });
     done();
   });
-
 });

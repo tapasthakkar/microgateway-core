@@ -25,10 +25,12 @@ var Gateway = function (config) {
   this.pluginLoader = pluginsLib();
 };
 
+
 module.exports = function (config) {
   return new Gateway(config);
 }
 
+module.exports.Logging = logging;
 Gateway.prototype.start = function (cb) {
   debug('starting edgemicro');
   debug('loaded config ' + util.inspect(configService.get(), {colors: true}));
