@@ -22,6 +22,7 @@ TestPlugin.prototype.init = function myPlugin1() {
 
   return {
     onrequest: function (req, res, data, next) {
+      console.log('onreq')
       cb('onrequest', data, function () {
         res.setHeader("x-onrequest-visited", 'true');
         headers.push("x-onrequest-visited");
@@ -30,6 +31,7 @@ TestPlugin.prototype.init = function myPlugin1() {
     },
 
     onresponse: function (req, res, data, next) {
+      console.log('onres')
       cb('onresponse', data, function () {
         res.setHeader("x-onresponse-visited", 'true');
         headers.push("x-onresponse-visited");

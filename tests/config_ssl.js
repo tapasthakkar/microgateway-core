@@ -11,16 +11,28 @@ const fs = require('fs');
 const gatewayPort = 8800
 const port = 3300
 const baseConfig = {
-  edgemicro: {
+  system: {
     port: gatewayPort,
     logging: { level: 'info', dir: './tests/log' },
     ssl: {
       key: './tests/server.key',
       cert: './tests/server.crt'    
+    },
+    vhosts: {
+      myvhost: {
+        vhost: 'localhost:'+gatewayPort,
+        cert: './tests/server.crt',
+        key: './tests/server.key'
+      }
     }
   },
   proxies: [
-    { base_path: '/v1', secure: false, url: 'http://localhost:' + port }
+    { 
+      base_path: '/v1', 
+      secure: false, 
+      url: 'http://localhost:' + port,
+      vhost: "myvhost"
+    }
   ]
 }
 
@@ -65,7 +77,7 @@ describe('test ssl configuration handling', () => {
           res.end('OK')
         }, () => {
           gateway.start((err) => {
-            assert(!err, err)
+            assert.ok(!err)
 
             request({
               method: 'GET',
@@ -74,7 +86,7 @@ describe('test ssl configuration handling', () => {
               rejectUnauthorized: false,
               url: 'https://localhost:' + gatewayPort + '/v1'
             }, (err, r, body) => {
-              assert(!err, err)
+              assert.ok(!err)
               assert.equal('OK', body)
               done()
             })

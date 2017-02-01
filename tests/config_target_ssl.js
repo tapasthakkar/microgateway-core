@@ -11,12 +11,24 @@ const fs = require('fs');
 const gatewayPort = 8800
 const port = 3300
 const baseConfig = {
-  edgemicro: {
+  system: {
     port: gatewayPort,
-    logging: { level: 'info', dir: './tests/log' }
+    logging: { level: 'info', dir: './tests/log' },
+    vhosts: {
+      myvhost: {
+        vhost: 'localhost:'+gatewayPort,
+        cert: './tests/server.crt',
+        key: './tests/server.key'
+      }
+    }
   },
   proxies: [
-    { base_path: '/v1', secure: true, url: 'https://localhost:' + port }
+    { 
+      base_path: '/v1', 
+      secure: true, 
+      url: 'https://localhost:' + port,
+      vhost: "myvhost"
+    }
   ],
   targets: [
     {

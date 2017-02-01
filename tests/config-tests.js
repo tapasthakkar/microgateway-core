@@ -8,14 +8,26 @@ const restify = require('restify')
 const should = require('should')
 
 const gatewayPort = 8800
-const port = 3300
+const port = 8000
 const baseConfig = {
-  edgemicro: {
+  system: {
     port: gatewayPort,
-    logging: { level: 'info', dir: './tests/log' }
+    logging: { level: 'info', dir: './tests/log' },
+    vhosts: {
+      myvhost: {
+        vhost: 'localhost:'+gatewayPort,
+        cert: './tests/server.crt',
+        key: './tests/server.key'
+      }
+    }
   },
   proxies: [
-    { base_path: '/v1', secure: false, url: 'http://localhost:' + port }
+    { 
+      base_path: '/v1', 
+      secure: false, 
+      url: 'http://localhost:' + port,
+      vhost: "myvhost"
+    }
   ]
 }
 

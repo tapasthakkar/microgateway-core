@@ -13,7 +13,7 @@ describe('logging', function() {
   process.env.NODE_ENV = 'test';
   var config = {
     uid: '1',
-    edgemicro: {
+    system: {
       port: 8000,
       logging: {
         level: 'info',
