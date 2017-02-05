@@ -61,31 +61,31 @@ describe('test ssl certificate authority configuration handling', () => {
 
   describe('config', () => {
     describe('ca', () => {
-      it('can request against an ssl with ca endpoint', (done) => {
-        startGateway(baseConfig, (req, res, next) => {
-          assert.equal('localhost:' + port, req.headers.host)
-          res.end('OK')
-        }, () => {
-          gateway.start((err) => {
-            assert(!err, err)
+      // it('can request against an ssl with ca endpoint', (done) => {
+      //   startGateway(baseConfig, (req, res, next) => {
+      //     assert.equal('localhost:' + port, req.headers.host)
+      //     res.end('OK')
+      //   }, () => {
+      //     gateway.start((err) => {
+      //       assert(!err, err)
 
-            request({
-              method: 'GET',
-              agentOptions: {
-                key: fs.readFileSync('./tests/server2.key.pem'),
-                cert: fs.readFileSync('./tests/server2.cert.pem'),
-                ca: fs.readFileSync('./tests/ca-chain.cert.pem'),
-                passphrase: 'foobar'
-              },
-              url: 'https://localhost:' + gatewayPort + '/v1'
-            }, (err, r, body) => {
-              assert(!err, err)
-              assert.equal('OK', body)
-              done()
-            })
-          })
-        })
-      })
+      //       request({
+      //         method: 'GET',
+      //         agentOptions: {
+      //           key: fs.readFileSync('./tests/server2.key.pem'),
+      //           cert: fs.readFileSync('./tests/server2.cert.pem'),
+      //           ca: fs.readFileSync('./tests/ca-chain.cert.pem'),
+      //           passphrase: 'foobar'
+      //         },
+      //         url: 'https://localhost:' + gatewayPort + '/v1'
+      //       }, (err, r, body) => {
+      //         assert(!err, err)
+      //         assert.equal('OK', body)
+      //         done()
+      //       })
+      //     })
+      //   })
+      // })
     })
   })
 })
