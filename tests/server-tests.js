@@ -100,7 +100,7 @@ describe('server startup', function () {
 
 function getConfig(gatewayPort){
   var port = 80;
-  return  {
+  var config = {
     edgemicro: {
       port: gatewayPort,
       logging: {level: 'info',dir:'./tests/log'}
@@ -110,4 +110,5 @@ function getConfig(gatewayPort){
       {base_path: '/v1', secure: false, url: 'http://localhost:' + port}
     ]
   };
+  return config;
 }

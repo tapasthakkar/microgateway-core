@@ -60,7 +60,7 @@ describe('test ssl certificate authority configuration handling', () => {
   })
 
   describe('config', () => {
-    describe('ssl', () => {
+    describe('ca', () => {
       it('can request against an ssl with ca endpoint', (done) => {
         startGateway(baseConfig, (req, res, next) => {
           assert.equal('localhost:' + port, req.headers.host)
