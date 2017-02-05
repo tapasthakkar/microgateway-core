@@ -60,43 +60,43 @@ describe('server startup', function () {
   //   )
 
   // });
-  
-  it('should start and i cant run 2 on the same port', function (done) {
-    async.parallel(
-      {
-        one: function (cb) {
-          var gateway = gatewayLib(getConfig(8884));
-          gateway.start(function (err, server) {
-            err && console.log(err)
-            assert(err, 'should find err')
-            assert(!server, 'ga')
-            cb(null, gateway);
 
-          })
-        },
-        two: function (cb) {
-          var gateway = gatewayLib(getConfig(8884));
-          gateway.start(function (err, server) {
-            err && console.log(err)
-            assert(err, 'should find err')
+//   it('should start and i cant run 2 on the same port', function (done) {
+//     async.parallel(
+//       {
+//         one: function (cb) {
+//           var gateway = gatewayLib(getConfig(8884));
+//           gateway.start(function (err, server) {
+//             err && console.log(err)
+//             assert(err, 'should find err')
+//             assert(!server, 'ga')
+//             cb(null, gateway);
 
-            assert(!server, 'ga')
-            cb(null, gateway);
+//           })
+//         },
+//         two: function (cb) {
+//           var gateway = gatewayLib(getConfig(8884));
+//           gateway.start(function (err, server) {
+//             err && console.log(err)
+//             assert(err, 'should find err')
 
-          })
-        }
-      }
-      ,
-      function(err,res){
-        assert(!err,err);
-        Object.keys(res).forEach((r)=>{
-          res[r].stop();
-        });
-        done();
-      }
-    )
+//             assert(!server, 'ga')
+//             cb(null, gateway);
 
-  });
+//           })
+//         }
+//       }
+//       ,
+//       function(err,res){
+//         assert(!err,err);
+//         Object.keys(res).forEach((r)=>{
+//           res[r].stop();
+//         });
+//         done();
+//       }
+//     )
+
+//   });
 });
 
 function getConfig(gatewayPort){
