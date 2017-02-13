@@ -4,7 +4,7 @@ const _ = require('lodash')
 const assert = require('assert')
 const gatewayService = require('../index')
 const request = require('request')
-const https = require('https')
+const http = require('http')
 const should = require('should')
 const fs = require('fs');
 
@@ -15,11 +15,7 @@ var gateway
 var server
 
 const startGateway = (config, handler, done) => {
-  const opts = {
-    key: fs.readFileSync('./tests/server.key'),
-    cert: fs.readFileSync('./tests/server.crt') 
-  };
-  server = https.createServer(opts, handler);
+  server = http.createServer(handler);
 
   server.listen(port, function() {
     console.log('%s listening at %s', server.name, server.url)
@@ -45,7 +41,7 @@ describe('test configuration handling', () => {
 
   describe('target', () => {
     describe('timeout of request', () => {
-      it('can have the timeout of the request to target tweaked. Causing a 502 bad gateway.', (done) => {
+      it('can have the timeout of the request to target tweaked. Causing a 504 bad gateway.', (done) => {
         
         const baseConfig = {
           edgemicro: {
@@ -60,7 +56,9 @@ describe('test configuration handling', () => {
 
         startGateway(baseConfig, (req, res) => {
           assert.equal('localhost:' + port, req.headers.host)
-          res.end('OK')
+          setTimeout(()=> {
+            res.end('OK')
+          }, 10 * 1000)
         }, () => {
           gateway.start((err) => {
             assert.ok(!err, err)
@@ -70,7 +68,7 @@ describe('test configuration handling', () => {
               url: 'http://localhost:' + gatewayPort + '/v1'
             }, (err, r, body) => {
               assert.ok(!err, err)
-              assert.equal(r.statusCode, 502)
+              assert.equal(r.statusCode, 504)
               done()
             })
           })
@@ -102,7 +100,7 @@ describe('test configuration handling', () => {
               url: 'http://localhost:' + gatewayPort + '/v1'
             }, (err, r, body) => {
               assert.ok(!err, err)
-              assert.equal(r.statusCode, 502)
+              assert.equal(r.statusCode, 200)
               done()
             })
           })
