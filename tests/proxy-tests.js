@@ -205,7 +205,6 @@ describe('test configuration handling', () => {
         })
       })
 
-
     })
   })
 })
