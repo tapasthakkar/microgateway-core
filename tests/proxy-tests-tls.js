@@ -27,6 +27,8 @@ const startGateway = (config, handler, done) => {
     cert: fs.readFileSync('./tests/server.crt') 
   };
 
+  //This is a mock proxy server. 
+  //Meant to replicate a squid proxy in basic functionality for testing purposes.
   proxy = https.createServer(opts, (req, res) => {
     var r = request({
       url: req.url,
