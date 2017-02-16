@@ -21,6 +21,9 @@ var proxy
 var server
 
 const startGateway = (config, handler, done) => {
+
+  //This is a mock proxy server. 
+  //Meant to replicate a squid proxy in basic functionality for testing purposes.
   proxy = http.createServer((req, res) => {
     var r = request({
       url: req.url,
