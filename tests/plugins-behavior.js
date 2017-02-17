@@ -28,7 +28,7 @@ describe('plugin behavior', () => {
     });
   });
 
-  it('will provide three arguments to in req, res, data, next format', (done) => {
+  it('will provide four arguments to in req, res, data, next format', (done) => {
     var plugins = {
       'ondata_request': function(req, res, data, next) {
         assert.equal(req, 'foo');
@@ -51,7 +51,7 @@ describe('plugin behavior', () => {
     });
   });
 
-  it('will provide three arguments to in req, res, targetRes, data,  next format', (done) => {
+  it('will provide five arguments to in req, res, targetRes, data,  next format', (done) => {
     var plugins = {
       'ondata_request': function(req, res, targetResponse, data, next) {
         assert.equal(req, 'foo');
@@ -67,6 +67,62 @@ describe('plugin behavior', () => {
       sourceRequest: 'foo',
       sourceResponse: 'bar',
       targetResponse: 'quux',
+    }
+
+    PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
+      assert.equal(arg1, null);
+      assert.equal(arg2, null);
+      done(); 
+    });
+  
+  });
+
+  it('will provide six arguments to in req, res, targetReq, targetRes, data, next format with targetReq being null', (done) => {
+    var plugins = {
+      'ondata_request': function(req, res, targetReq, targetResponse, data, next) {
+        assert.equal(req, 'foo');
+        assert.equal(res, 'bar');
+        assert.equal(data, 'foo');
+        assert.equal(targetReq, null);
+        assert.equal(targetResponse, 'quux');
+        assert.equal(typeof next, 'function');
+        next(null, null); 
+      }
+    }
+
+    var opts = {
+      sourceRequest: 'foo',
+      sourceResponse: 'bar',
+      targetRequest: null,
+      targetResponse: 'quux'
+    }
+
+    PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
+      assert.equal(arg1, null);
+      assert.equal(arg2, null);
+      done(); 
+    });
+  
+  });
+
+  it('will provide three arguments to in req, res, targetReq, targetRes, data, next format', (done) => {
+    var plugins = {
+      'ondata_response': function(req, res, targetReq, targetResponse, data, next) {
+        assert.equal(req, 'foo');
+        assert.equal(res, 'bar');
+        assert.equal(data, 'foo');
+        assert.equal(targetReq, 'baz');
+        assert.equal(targetResponse, 'quux');
+        assert.equal(typeof next, 'function');
+        next(null, null); 
+      }
+    }
+
+    var opts = {
+      sourceRequest: 'foo',
+      sourceResponse: 'bar',
+      targetRequest: 'baz',
+      targetResponse: 'quux'
     }
 
     PluginsMiddleware.getPluginHookForEvent(plugins, 'data', opts)('foo', (arg1, arg2) =>{
