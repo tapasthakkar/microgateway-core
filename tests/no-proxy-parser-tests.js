@@ -81,4 +81,25 @@ describe('no proxy variable parsing and matching', () => {
     const matched = NoProxyParseAndMatch('http://bar.baz/', 'localhost,foo.bar,bar.baz');
     assert.equal(matched, true);
   });
+
+
+  it('will parse and match a host with port that is second in list when no proxy is comma delimited list', ()=> {
+    const matched = NoProxyParseAndMatch('http://foo.bar:8080/', 'localhost,foo.bar:8080,bar.baz');
+    assert.equal(matched, true);
+  });
+
+  it('will parse and match a host with port that is last in list when no proxy is comma delimited list', ()=> {
+    const matched = NoProxyParseAndMatch('http://bar.baz:8080/', 'localhost,foo.bar,bar.baz:8080');
+    assert.equal(matched, true);
+  });
+
+  it('will not partially match hosts', () => {
+    const matched = NoProxyParseAndMatch('http://ar.baz:8080/', 'localhost,foo.bar,bar.baz:8080');
+    assert.equal(matched, false);
+  });
+
+  it('will not partially match hosts with only one in no_proxy list', () => {
+    const matched = NoProxyParseAndMatch('http://foo/', 'foo.bar');
+    assert.equal(matched, false);
+  });
 });
