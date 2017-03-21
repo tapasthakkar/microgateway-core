@@ -36,4 +36,34 @@ describe('no proxy variable parsing and matching', () => {
     const matched = NoProxyParseAndMatch('http://localhost:8080/', 'localhost');
     assert.equal(matched, true);
   });
+
+  it('will return false if the no_proxy variable is undefined.', ()=> {
+    const matched = NoProxyParseAndMatch('http://localhost:8080/', undefined);
+    assert.equal(matched, false);
+  });
+
+  it('will return false if the no_proxy variable is null.', ()=> {
+    const matched = NoProxyParseAndMatch('http://localhost:8080/', null);
+    assert.equal(matched, false);
+  });
+
+  it('will return false if the no_proxy variable is an empty string.', ()=> {
+    const matched = NoProxyParseAndMatch('http://localhost:8080/', '');
+    assert.equal(matched, false);
+  });
+
+  it('will return false if the host variable is undefined.', ()=> {
+    const matched = NoProxyParseAndMatch(undefined, 'localhost');
+    assert.equal(matched, false);
+  });
+
+  it('will return false if the host variable is null.', ()=> {
+    const matched = NoProxyParseAndMatch(null, 'localhost');
+    assert.equal(matched, false);
+  });
+
+  it('will return false if the host variable is an empty string.', ()=> {
+    const matched = NoProxyParseAndMatch('', 'localhost');
+    assert.equal(matched, false);
+  });
 });
