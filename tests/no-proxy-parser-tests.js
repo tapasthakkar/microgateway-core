@@ -66,4 +66,19 @@ describe('no proxy variable parsing and matching', () => {
     const matched = NoProxyParseAndMatch('', 'localhost');
     assert.equal(matched, false);
   });
+  
+  it('will parse and match a host when no proxy is comma delimited list', ()=> {
+    const matched = NoProxyParseAndMatch('http://localhost/', 'localhost,foo.bar,bar.baz');
+    assert.equal(matched, true);
+  });
+
+  it('will parse and match a host that is second in list when no proxy is comma delimited list', ()=> {
+    const matched = NoProxyParseAndMatch('http://foo.bar/', 'localhost,foo.bar,bar.baz');
+    assert.equal(matched, true);
+  });
+
+  it('will parse and match a host that is last in list when no proxy is comma delimited list', ()=> {
+    const matched = NoProxyParseAndMatch('http://bar.baz/', 'localhost,foo.bar,bar.baz');
+    assert.equal(matched, true);
+  });
 });
