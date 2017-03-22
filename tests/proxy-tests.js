@@ -245,6 +245,40 @@ describe('test configuration handling', () => {
         })
       })
 
+      it('wont route traffic through an http proxy with forced tunneling with no_proxy', (done) => {
+        
+        process.env.NO_PROXY = 'localhost'
+        const baseConfig = {
+          edgemicro: {
+            port: gatewayPort,
+            logging: { level: 'info', dir: './tests/log' },
+            proxy: 'http://localhost:' + proxyPort,
+            proxy_tunnel: true
+          },
+          proxies: [
+            { base_path: '/v1', secure: false, url: 'http://localhost:' + port }
+          ]
+        }
+
+        startGateway(baseConfig, (req, res) => {
+          assert.equal('localhost:' + port, req.headers.host)
+          res.end('OK')
+        }, () => {
+          gateway.start((err) => {
+            assert.ok(!err, err)
+
+            request({
+              method: 'GET',
+              url: 'http://localhost:' + gatewayPort + '/v1'
+            }, (err, r, body) => {
+              assert.ok(!err, err)
+              assert.equal(r.statusCode, 200)
+              done()
+            })
+          })
+        })
+      })
+
     })
   })
 })
