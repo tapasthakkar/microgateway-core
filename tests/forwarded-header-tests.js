@@ -151,6 +151,33 @@ describe('test forwarding headers', () => {
         })
       })
 
+      it('will not set x-forwarded-proto if already set', (done) => {
+        var clonedConfig = _.clone(baseConfig)
+        clonedConfig.headers["x-forwarded-proto"] = true;
+        startGateway(clonedConfig, (req, res, next) => {
+          const headers = req.headers;
+          assert.equal(headers["x-forwarded-proto"], "https")
+          assert.equal('localhost:' + port, req.headers.host)
+          res.end('OK')
+        }, () => {
+          gateway.start((err) => {
+            assert(!err, err)
+
+            request({
+              method: 'GET',
+              headers: {
+                'x-forwarded-proto': 'https'
+              },
+              url: 'http://localhost:' + gatewayPort + '/v1'
+            }, (err, r, body) => {
+              assert.ok(!err)
+              assert.equal('OK', body)
+              done()
+            })
+          })
+        })
+      })
+
 
       it('will not set x-forwarded-proto', (done) => {
         var clonedConfig = _.clone(baseConfig)
