@@ -8,20 +8,20 @@ to use microgateway-core you must initialize microgateway with a config.  the co
 
 ```javascript
 const config = require('microgateway-config');
-config.init({source:'<somepath.to.a.yaml.file>');
+config.init({source:'<somepath.to.a.yaml.file>', targetDir:'<path.to.write.new.config>', targetFile:'<file.name.of.new.config>'});
 const Gateway = require('microgateway-core');
 const plugin = {
 	init:(config,logging,stats)=>{
 		return {
-			onrequest:(req,res,[options],cb){
+			onrequest:(req,res,options,cb) => {
 				cb();
 			}
 		}
 	}
 }
-config.get({source:'same.yaml',keys:{tokenstoanapigegateway}},(err,config)=>{
+config.get({source:'same.yaml',keys:{key: '', secret: ''}},(err,config)=>{
 	const gateway = Gateway(config);
-	gateway.addplugin(plugin);
+	gateway.addPlugin('my-plugin', plugin.init);
 	gateway.start((server)=>{
 	});
 });
