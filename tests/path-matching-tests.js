@@ -29,8 +29,20 @@ describe('Path matching functionality', () => {
        assert.equal(matcher('/foo/baz/bar', '/foo/*/bar'), true);
     });
 
+    it('will match against a full path that doesnt have content in the pattern', () => {
+       assert.equal(matcher('/foo/baz/bar/quux/foo', '/foo/*/bar'), true);
+    });
+
+    it('will not match against a full path that doesnt have content in the pattern', () => {
+       assert.equal(matcher('/bloo/baz/bar/quux/foo', '/foo/*/bar'), false);
+    });
+
     it('will match basepaths to full paths', () => {
       assert.equal(matcher('/foo/bar', '/foo'), true);
+    });
+
+    it('will not match bad basepaths to full paths', () => {
+      assert.equal(matcher('/bloo/bar', '/foo'), false);
     });
   });
 
