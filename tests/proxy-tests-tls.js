@@ -191,12 +191,12 @@ describe('test configuration handling', () => {
         }, () => {
           gateway.start((err) => {
             assert.ok(!err, err)
-
+          
             request({
               method: 'GET',
               url: 'http://localhost:' + gatewayPort + '/v1'
             }, (err, r, body) => {
-              assert.ok(!err, err)
+              assert.ok(!err)
               assert.equal(r.statusCode, 200)
               done()
             })
