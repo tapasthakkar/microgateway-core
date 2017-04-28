@@ -8,8 +8,8 @@ const https = require('https')
 const should = require('should')
 const fs = require('fs');
 
-const gatewayPort = 8800
-const port = 3300
+const gatewayPort = 8810
+const port = 3310
 const baseConfig = {
   edgemicro: {
     port: gatewayPort,
@@ -51,7 +51,7 @@ const startGateway = (config, handler, done) => {
   })
 }
 
-describe('test configuration handling', () => {
+describe('test configuration handling TLS/SSL', () => {
   afterEach((done) => {
     if (gateway) {
       gateway.stop(() => {})
