@@ -52,20 +52,19 @@ Gateway.prototype.stop = function(cb){
 }
 
 Gateway.prototype.addPlugin = function (proxy, name, plugin) {
-  if (!this.preventDuplicatePluginsPerProxy[proxy.proxy_name]) {
-      this.preventDuplicatePluginsPerProxy[proxy.proxy_name] = {};
+  if (!this.preventDuplicatePluginsPerProxy[proxy.name]) {
+      this.preventDuplicatePluginsPerProxy[proxy.name] = {};
   }
-  if (this.preventDuplicatePluginsPerProxy[proxy.proxy_name][name]) {
-    console.log("Plugin " + name + " already added for proxy " + proxy.proxy_name + ".  skipping");
+  if (this.preventDuplicatePluginsPerProxy[proxy.name][name]) {
     return;
   }
-  this.preventDuplicatePluginsPerProxy[proxy.proxy_name][name] = true;
+  this.preventDuplicatePluginsPerProxy[proxy.name][name] = true;
 
   assert(name,"plugin must have a name")
   assert(_.isString(name),"name must be a string");
   assert(_.isFunction(plugin),"plugin must be a function(config,logger,stats){return {onresponse:function(req,res,data,next){}}}");
   const handler = this.pluginLoader.loadPluginForProxy({plugin:plugin, pluginName:name, proxy: proxy}, gatherPluginConfigForProxy(name, proxy));
-  var pluginMapKey = proxy.proxy_name;
+  var pluginMapKey = proxy.name;
   if (!this.plugins[pluginMapKey]) {
         this.plugins[pluginMapKey] = [];
       }
