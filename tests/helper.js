@@ -48,16 +48,13 @@ function getJWT(cb) {
       }
     },
     function(err, resp, body) {
-      console.log('body-jwt', body.token);
-      if (cb) cb(body.token);
+      if (err) console.error('err in jwt req', err);
+      if (resp.statusCode !== 200) console.error('resp code', resp.statusCode);
+      if (cb && body && body.token) cb(body.token);
     }
   );
 }
 module.exports = {
   getJWT,
-  //   getProxiesBootstrap,
-  //   getAccessToken,
   getJWTProm
-  //   getProducts,
-  //   apiProducts
 };

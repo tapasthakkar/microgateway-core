@@ -1,17 +1,16 @@
 const https = require('https');
+const http = require('http');
 const assert = require('assert');
 const fs = require('fs');
-const http = require('http');
-const gatewayService = require('../index');
-const path = require('path');
-const { getJWTProm, getJWT } = require('./helper.js');
 const edgeConfig = require('microgateway-config');
+const gatewayService = require('../index');
+const { getJWT } = require('./helper.js');
 let { user, username, password, key, secret, org, env, tokenSecret, tokenId } = require('./env.js');
 var gateway;
 var jwtkn;
 let helloWorldSrv;
 let helloWorldSrvPort = 4435;
-
+let config;
 describe('Certificate Revocation List', () => {
   before(done => {
     helloWorldSrv = http
@@ -27,22 +26,22 @@ describe('Certificate Revocation List', () => {
     helloWorldSrv.close();
     done();
   });
-  describe('MGW CRL', () => {
-    it('MGW accepts connections with valid client cert', done => {
+  describe('MGW SSL CRL', () => {
+    it('MGW SSL w CRL does not block valid client cert', done => {
       edgeConfig.get(
-        { keys: { key, secret }, source: path.join(__dirname, 'fixtures', 'crl-config.yaml') },
+        { keys: { key, secret }, source: `${__dirname}/fixtures/crl-config.yaml` },
         (err, configDownload) => {
           config = configDownload;
           config.edgemicro.ssl = {
-            cert: __dirname + '/fixtures/server-crt.pem',
-            key: __dirname + '/fixtures/server-key.pem',
-            ca: __dirname + '/fixtures/ca-crt.pem',
-            crl: __dirname + '/fixtures/ca-crl.pem',
+            cert: `${__dirname}/fixtures/server-crt.pem`,
+            key: `${__dirname}/fixtures/server-key.pem`,
+            ca: `${__dirname}/fixtures/ca-crt.pem`,
+            crl: `${__dirname}/fixtures/ca-crl.pem`,
             requestCert: true,
             rejectUnauthorized: true
           };
 
-          config.proxies[0].url = 'http://localhost:' + helloWorldSrvPort;
+          config.proxies[0].url = `http://localhost:${helloWorldSrvPort}`;
           config.proxies[0].base_path = '/hello_world';
           gateway = gatewayService(config);
           gateway.start(function() {
@@ -50,7 +49,7 @@ describe('Certificate Revocation List', () => {
               jwtkn = tkn;
               let options = {
                 hostname: 'localhost',
-                port: 8000,
+                port: config.edgemicro.port,
                 path: '/hello_world',
                 method: 'GET',
                 key: fs.readFileSync(__dirname + '/fixtures/client1-key.pem'),
@@ -60,16 +59,16 @@ describe('Certificate Revocation List', () => {
                   Authorization: `Bearer ${tkn}`
                 }
               };
-              let req = https.request(options, function(res) {
+              let req = https.request(options, res => {
                 let dataStr = '';
-                res.on('data', function(data) {
+                res.on('data', data => {
                   dataStr += `${data}`;
                   if (dataStr.includes('hello world')) done();
                 });
               });
               req.end();
-              req.on('error', function(e) {
-                assert.equal(e, null);
+              req.on('error', err => {
+                assert.equal(err, null);
                 done();
               });
             });
@@ -78,22 +77,22 @@ describe('Certificate Revocation List', () => {
       );
     });
 
-    it('Refuses connection with revoked client cert', done => {
+    it('Refuses connection presenting revoked client cert', done => {
       let options = {
         hostname: 'localhost',
-        port: 8000,
+        port: config.edgemicro.port,
         path: '/hello_world',
         method: 'GET',
         key: fs.readFileSync(__dirname + '/fixtures/client2-key.pem'),
-        cert: fs.readFileSync(__dirname + '/fixtures/client2-crt.pem'),
+        cert: fs.readFileSync(__dirname + '/fixtures/client2-crt.pem'), //cert has been revoked on fixtures/ca-crl.pem
         ca: fs.readFileSync(__dirname + '/fixtures/ca-crt.pem'),
         headers: {
           Authorization: `Bearer ${jwtkn}`
         }
       };
-      let req = https.request(options, function(res) {
+      let req = https.request(options, res => {
         let dataStr = '';
-        res.on('data', function(data) {
+        res.on('data', data => {
           dataStr += `${data}`;
           if (dataStr.includes('hello world')) {
             assert(false);
@@ -102,8 +101,8 @@ describe('Certificate Revocation List', () => {
         });
       });
       req.end();
-      req.on('error', function(e) {
-        assert.notEqual(err, null);
+      req.on('error', err => {
+        assert.equal(err.code, 'ECONNRESET');
         done();
       });
     });
