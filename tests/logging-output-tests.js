@@ -52,11 +52,14 @@ describe('logging', function() {
     assert.equal(filePath, path.join('./tests/log', util.format('edgemicro-%s-%s-%d-api.log', os.hostname(), '1', 1)));
   });
 
-  it('will log to a file', () => {
+  it('will log to a file', (done) => {
     var whereToFindLog = logging._calculateLogFilePath('./tests/log', '1', 1);
     log.writeLogRecord({ level: 'info', msg: 'foo' });
-    var content = fs.readFileSync(whereToFindLog);
-    assert.equal(content.toString(), 'foo');
+    var content = fs.readFileSync(whereToFindLog,'utf8');
+    setTimeout(()=>{
+      assert.deepStrictEqual(content, 'foo');
+      done();
+    },100);
   });
 
   it('will log multiple messages to file', done => {
