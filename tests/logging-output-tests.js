@@ -43,23 +43,25 @@ describe('logging', function() {
     done();
   });
 
-  it('exposes a _calculateLogFilePath function', () => {
+  it('exposes a _calculateLogFilePath function', done => {
     assert.ok(logging._calculateLogFilePath);
+    done();
   });
 
-  it('will calculate a file path for a log in a consistent way', () => {
+  it('will calculate a file path for a log in a consistent way', done => {
     var filePath = logging._calculateLogFilePath('./tests/log', '1', 1);
     assert.equal(filePath, path.join('./tests/log', util.format('edgemicro-%s-%s-%d-api.log', os.hostname(), '1', 1)));
+    done();
   });
 
-  it('will log to a file', (done) => {
+  it('will log to a file', done => {
     var whereToFindLog = logging._calculateLogFilePath('./tests/log', '1', 1);
     log.writeLogRecord({ level: 'info', msg: 'foo' });
-    var content = fs.readFileSync(whereToFindLog,'utf8');
-    setTimeout(()=>{
+    setTimeout(() => {
+      var content = fs.readFileSync(whereToFindLog, 'utf8');
       assert.deepStrictEqual(content, 'foo');
       done();
-    },100);
+    }, 100);
   });
 
   it('will log multiple messages to file', done => {
@@ -73,6 +75,6 @@ describe('logging', function() {
       console.log('content', content);
       assert.deepStrictEqual(content, 'foo1foo2');
       done();
-    }, 100);
+    }, 150);
   });
 });
