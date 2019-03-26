@@ -18,13 +18,20 @@
     "chai": "~2.3.0",
     "istanbul": "~0.4.2",
     "mocha": "~5.2.0",
+    "nyc": "^13.3.0",
     "restify": "~7.2.1",
     "should": "~8.2.2",
     "tmp": "0.0.28"
   },
   "scripts": {
     "start": "node server.js",
-    "test": "NODE_ENV=test node_modules/mocha/bin/_mocha --recursive tests",
-    "coverage": "DEBUG=gateway:* NODE_ENV=test node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- tests"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha tests --timeout 30000",
+    "coverage": "NODE_ENV=test nyc ./node_modules/.bin/mocha tests --timeout 30000",
+    "coverage:debug": "DEBUG=* NODE_ENV=test  nyc ./node_modules/.bin/mocha --timeout 30000"
+  },
+  "nyc": {
+    "exclude": [
+      "tests/**"
+    ]
   }
 }
