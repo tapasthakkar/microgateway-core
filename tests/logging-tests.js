@@ -22,8 +22,8 @@ describe('logging', function() {
   };
 
   var log;
+  var logging = require('../lib/logging');
   beforeEach(function(done) {
-    var logging = require('../lib/logging');
     logging.init(config);
     log = logging.getLogger();
     done();
@@ -31,7 +31,7 @@ describe('logging', function() {
 
   it('logger should expose a writeLogRecord', () => {
     assert.ok(log.writeLogRecord);
-  }); 
+  });
   it('none', function(done) {
     var logging = require('../lib/logging');
     var level = config.edgemicro.logging.level;
@@ -41,8 +41,8 @@ describe('logging', function() {
       var text = log[level](message);
       expect(text).to.be.null;
     });
-     config.edgemicro.logging.level = level
-      logging.init(config);
+    config.edgemicro.logging.level = level;
+    logging.init(config);
     log = logging.getLogger();
     done();
   });
@@ -80,7 +80,6 @@ describe('logging', function() {
     });
     done();
   });
-
 
   it('error', function(done) {
     config.edgemicro.logging.level = 'error';
