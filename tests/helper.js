@@ -8,17 +8,10 @@ function getJWTProm() {
       {
         uri: `https://${org}-${env}.apigee.net/edgemicro-auth/token`,
         method: 'POST',
-        auth: {
-          user: key,
-          pass: secret,
-          sendImmediately: true
-        },
         json: {
           client_id: tokenId,
           client_secret: tokenSecret,
           grant_type: 'client_credentials',
-          username: user,
-          password: password
         }
       },
       function(err, resp, body) {
@@ -34,17 +27,11 @@ function getJWT(cb) {
     {
       uri: `https://${org}-${env}.apigee.net/edgemicro-auth/token`,
       method: 'POST',
-      auth: {
-        user: key,
-        pass: secret,
-        sendImmediately: true
-      },
+     
       json: {
         client_id: tokenId,
         client_secret: tokenSecret,
         grant_type: 'client_credentials',
-        username: user,
-        password: password
       }
     },
     function(err, resp, body) {
