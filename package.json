@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "chai": "~2.3.0",
-    "istanbul": "~0.4.2",
     "mocha": "~5.2.0",
     "nyc": "^13.3.0",
     "restify": "~7.2.1",
