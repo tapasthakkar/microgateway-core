@@ -1,6 +1,6 @@
 {
   "name": "microgateway-core",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Core engine for Apigee Edge Microgateway",
   "main": "index.js",
   "license": "Apache-2.0",
