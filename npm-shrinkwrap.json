@@ -1982,8 +1982,9 @@
       }
     },
     "microgateway-config": {
-      "version": "github:apigee/microgateway-config#aa184adfdd765097a0f1cdf5eaa9789602002093",
-      "from": "github:apigee/microgateway-config#for-3.1.1",
+      "version": "3.1.1",
+      "resolved": "https://registry.npmjs.org/microgateway-config/-/microgateway-config-3.1.1.tgz",
+      "integrity": "sha512-HtBI6sxnNbWaUtT5GyFfEXHgUl0rQttuhDIK4youxUR/LFT4uJ8G1D5/vPPaBEDE7Hvi536tQvu/2wMlYVYYPg==",
       "requires": {
         "apigeetool": "^0.10.0",
         "async": "^1.5.2",
