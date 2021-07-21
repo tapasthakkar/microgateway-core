@@ -12,16 +12,12 @@ const tls = require('tls');
 const url = require('url');
 const util = require('util');
 
+var gateway, proxy, server;
 const gatewayPort = 8800
 const proxyPort = 4490;
 const port = 3300
 
-var gateway
-var proxy
-var server
-
 const startGateway = (config, handler, done) => {
-
   //This is a mock proxy server. 
   //Meant to replicate a squid proxy in basic functionality for testing purposes.
   proxy = http.createServer((req, res) => {
@@ -84,14 +80,33 @@ const startGateway = (config, handler, done) => {
   server.listen(port, function() {
     console.log('API Server listening at %s', JSON.stringify(server.address()))
 
-    proxy.listen(proxyPort, function(){
+    proxy.listen(proxyPort, function() {
       console.log('Proxy Server listening at %s',JSON.stringify(server.address()))
-      gateway = gatewayService(config)
-
-      done()
+      gateway = gatewayService(config);
+      done();
     }); 
     
-  })
+    const sockets = new Set();
+
+    server.on('connection', (socket) => {
+      sockets.add(socket);
+      server.once('close', () => {
+        sockets.delete(socket);
+      });
+    });
+  
+    /**
+     * Forcefully terminates HTTP server.
+     */
+    server.forceClose = (callback) => {
+      for (const socket of sockets) {
+        socket.destroy();
+        sockets.delete(socket);
+      }
+      server.close(callback);
+    };
+
+  });
 }
 
 describe('test configuration handling', () => {
@@ -298,7 +313,6 @@ describe('test configuration handling', () => {
         })
       })
 
-
       it('will respect the bypass config', (done) => {
         
         process.env.NO_PROXY = ''
@@ -371,7 +385,6 @@ describe('test configuration handling', () => {
         })
       })
 
-
       it('will respect HTTPS_PROXY when the proxy.url is not set', (done) => {
 
         process.env.HTTPS_PROXY = 'http://localhost:' + proxyPort;
@@ -407,7 +420,49 @@ describe('test configuration handling', () => {
           })
         })
       })
+    });
 
-    })
+    describe('Verify proxy response behaviour', () => {
+      it('will verify abrupt response scenario', (done) => {
+        const baseConfig = {
+          edgemicro: {
+            port: gatewayPort,
+            logging: { level: 'info', dir: './tests/log' }
+          },
+          proxies: [
+            { base_path: '/mocktarget', secure: false, url: `http://localhost:${port}` }
+          ]
+        }
+    
+        startGateway(baseConfig, (req, res) => {
+          const path = require('path');
+          const fileSystem = require('fs');
+          let filePath = path.join(__dirname, 'proxy-tests.js');
+          const readStream = fileSystem.createReadStream(filePath);
+          readStream.on("data", function (data) 
+          {
+            this.pause();
+            this.unpipe();
+        
+            setTimeout(function () 
+            {
+              readStream.resume();
+              readStream.pipe(res);
+            }, 3000);
+          });
+          readStream.pipe(res);
+        }, () => {
+          gateway.start((err) => {
+            assert.ok(!err, err);
+            request(`http://localhost:${gatewayPort}/mocktarget/abrupted-response`, function (error, response, body) {
+              assert.match(body, new RegExp('TargetResponseAborted'));
+              assert.strictEqual(response.statusCode, 200)
+              done();
+            });
+            setInterval(() => { server.forceClose(); }, 10);
+          })
+        });
+      });
+    });
   })
 })
