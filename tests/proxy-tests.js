@@ -463,6 +463,102 @@ describe('test configuration handling', () => {
           })
         });
       });
+    
+      it('will verify ECONNRESET socket hang up scenario', (done) => {
+        const baseConfig = {
+          edgemicro: {
+            port: gatewayPort,
+            logging: { level: 'info', dir: './tests/log' }
+          },
+          proxies: [
+            { base_path: '/mocktarget', secure: false, url: `http://localhost:${port}` }
+          ]
+        }
+    
+        startGateway(baseConfig, (req, res) => {
+          server.forceClose();
+          res.end('OK')
+        }, () => {
+          gateway.start((err) => {
+            assert.ok(!err, err);
+            request(`http://localhost:${gatewayPort}/mocktarget/abrupted-response`, function (error, response, body) {
+              assert.strictEqual(response.statusCode, 502);
+              assert.match(body, new RegExp('ECONNRESET'));
+              done();
+            });
+          })
+        });
+      });
+    
+      it('will verify ENOTFOUND wrong target scenario', (done) => {
+        const baseConfig = {
+          edgemicro: {
+            port: gatewayPort,
+            logging: { level: 'info', dir: './tests/log' }
+          },
+          proxies: [
+            { base_path: '/mocktarget', secure: false, url: `http://wrong-target:${port}` }
+          ]
+        }
+    
+        startGateway(baseConfig, (req, res) => {
+          res.end('ok');
+        }, () => {
+          gateway.start((err) => {
+            assert.ok(!err, err);
+            request(`http://localhost:${gatewayPort}/mocktarget/abrupted-response`, function (error, response, body) {
+              assert.match(body, new RegExp('ENOTFOUND'));
+              assert.strictEqual(response.statusCode, 502)
+              done();
+            });
+          })
+        });
+      });
+    
+      it('will verify target response matches the source response', (done) => {
+        const requestPromise = util.promisify(request);
+    
+        const baseConfig = {
+          edgemicro: {
+            port: gatewayPort,
+            logging: { level: 'info', dir: './tests/log' }
+          },
+          proxies: [
+            { base_path: '/mocktarget', secure: false, url: 'http://mocktarget.apigee.net/' }
+          ]
+        }
+    
+        startGateway(baseConfig, (req, res) => {
+          res.end('OK')
+        }, () => {
+          gateway.start(async (err) => {
+            assert.ok(!err, err);
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/200` });
+            assert.strictEqual(response.statusCode, 200)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/300` });
+            assert.strictEqual(response.statusCode, 300)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/400` });
+            assert.strictEqual(response.statusCode, 400)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/500` });
+            assert.strictEqual(response.statusCode, 500)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/501` });
+            assert.strictEqual(response.statusCode, 501)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/503` });
+            assert.strictEqual(response.statusCode, 503)
+    
+            var response = await requestPromise({ method: 'GET', url: 'http://localhost:' + gatewayPort + `/mocktarget/statuscode/505` });
+            assert.strictEqual(response.statusCode, 505)
+    
+            done();
+          })
+        });
+      });
     });
   })
 })
