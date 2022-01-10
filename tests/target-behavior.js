@@ -20,6 +20,8 @@ var mockLogger = {
     setLevel: function (level) {
     },
     writeLogRecord: function(record,cb) {              
+    },
+    debug: function(record,cb) {              
     }
   };
 

@@ -451,7 +451,7 @@ describe('test configuration handling', () => {
           assert.ok(!err, err);
           request(`http://localhost:${gatewayPort}/mocktarget/abrupted-response`, function (error, response, body) {
             assert.strictEqual(response.statusCode, 502);
-            assert.match(body, new RegExp('ECONNRESET'));
+            assert.ok(new RegExp('ECONNRESET').test(body));
             done();
           });
         })
@@ -475,7 +475,7 @@ describe('test configuration handling', () => {
         gateway.start((err) => {
           assert.ok(!err, err);
           request(`http://localhost:${gatewayPort}/mocktarget/abrupted-response`, function (error, response, body) {
-            assert.match(body, new RegExp('ENOTFOUND'));
+            assert.ok(new RegExp('ENOTFOUND').test(body));
             assert.strictEqual(response.statusCode, 502)
             done();
           });
