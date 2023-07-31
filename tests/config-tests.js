@@ -3,7 +3,7 @@
 const _ = require('lodash')
 const assert = require('assert')
 const gatewayService = require('../index')
-const request = require('request')
+const request = require('postman-request')
 const restify = require('restify')
 const should = require('should')
 
