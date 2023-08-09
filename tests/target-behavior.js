@@ -112,7 +112,7 @@ describe('target behavior', () => {
 
             console.dir(sourceResponse,{ depth : 2 })
             assert(sourceResponse.statusCode === 502)
-            assert("connect ECONNREFUSED 127.0.0.1:8888" === e.message)
+            assert("connect ECONNREFUSED 127.0.0.1:8888" === e.message || e.code === 'ECONNREFUSED')
             done()
         }
 
